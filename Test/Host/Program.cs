@@ -16,26 +16,6 @@ namespace Orleans.Providers.MongoDB.Test.Host
 
             await cluster.DeployAsync();
 
-            //var client = new ClientBuilder()
-            //    .ConfigureApplicationParts(options =>
-            //    {
-            //        options.AddApplicationPart(typeof(IHelloWorldGrain).Assembly);
-            //    })
-            //    .UseMongoDBClient(connectionString)
-            //    .UseMongoDBClustering(options =>
-            //    {
-            //        options.DatabaseName = "OrleansTestApp";
-            //    })
-            //    .Configure<ClusterOptions>(options =>
-            //    {
-            //        options.ClusterId = "helloworldcluster";
-            //        options.ServiceId = "helloworldcluster";
-            //    })
-            //    .ConfigureLogging(logging => logging.AddConsole())
-            //    .Build();
-
-            // await client.Connect();
-
             var client = cluster.Client;
 
             await TestBasic(client);
