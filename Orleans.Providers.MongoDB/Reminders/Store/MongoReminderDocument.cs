@@ -1,7 +1,7 @@
-﻿using System;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Orleans.Runtime;
+using System;
 
 namespace Orleans.Providers.MongoDB.Reminders.Store
 {
@@ -50,12 +50,12 @@ namespace Orleans.Providers.MongoDB.Reminders.Store
             };
         }
 
-        public ReminderEntry ToEntry(IGrainReferenceConverter grainReferenceConverter)
+        public ReminderEntry ToEntry(GrainReferenceKeyStringConverter grainReferenceConverter)
         {
             return new ReminderEntry
             {
                 ETag = Etag,
-                GrainRef = grainReferenceConverter.GetGrainFromKeyString(GrainId),
+                GrainRef = grainReferenceConverter.FromKeyString(GrainId),
                 Period = Period,
                 ReminderName = ReminderName,
                 StartAt = StartAt

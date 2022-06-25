@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Orleans.Configuration;
@@ -8,6 +6,8 @@ using Orleans.Providers.MongoDB.Configuration;
 using Orleans.Providers.MongoDB.Reminders.Store;
 using Orleans.Providers.MongoDB.Utils;
 using Orleans.Runtime;
+using System;
+using System.Threading.Tasks;
 
 // ReSharper disable ConvertIfStatementToReturnStatement
 // ReSharper disable RedundantIfElseBlock
@@ -20,7 +20,7 @@ namespace Orleans.Providers.MongoDB.Reminders
     {
         private readonly IMongoClient mongoClient;
         private readonly ILogger logger;
-        private readonly IGrainReferenceConverter grainReferenceConverter;
+        private readonly GrainReferenceKeyStringConverter grainReferenceConverter;
         private readonly MongoDBRemindersOptions options;
         private readonly string serviceId;
         private MongoReminderCollection collection;
@@ -30,7 +30,7 @@ namespace Orleans.Providers.MongoDB.Reminders
             ILogger<MongoReminderTable> logger,
             IOptions<MongoDBRemindersOptions> options,
             IOptions<ClusterOptions> clusterOptions,
-            IGrainReferenceConverter grainReferenceConverter)
+            GrainReferenceKeyStringConverter grainReferenceConverter)
         {
             this.mongoClient = mongoClientFactory.Create(options.Value, "Membership");
             this.logger = logger;

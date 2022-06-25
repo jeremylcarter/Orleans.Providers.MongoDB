@@ -1,17 +1,15 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using Orleans.Providers.MongoDB.Configuration;
+using Orleans.Providers.MongoDB.Utils;
+using Orleans.Runtime;
+using Orleans.Storage;
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using Newtonsoft.Json;
-using Orleans.Providers.MongoDB.Configuration;
-using Orleans.Providers.MongoDB.Utils;
-using Orleans.Runtime;
-using Orleans.Serialization;
-using Orleans.Storage;
 
 namespace Orleans.Providers.MongoDB.StorageProviders
 {
@@ -44,11 +42,6 @@ namespace Orleans.Providers.MongoDB.StorageProviders
             this.serializer = serializer;
         }
 
-        protected virtual JsonSerializerSettings ReturnSerializerSettings(ITypeResolver typeResolver, IProviderRuntime providerRuntime, IProviderConfiguration config)
-        {
-            return OrleansJsonSerializer.UpdateSerializerSettings(OrleansJsonSerializer.GetDefaultSerializerSettings(typeResolver, providerRuntime.GrainFactory), config);
-        }
-
         protected virtual string ReturnGrainName(string grainType, GrainReference grainReference)
         {
             return grainType.Split('.', '+').Last();
@@ -69,7 +62,8 @@ namespace Orleans.Providers.MongoDB.StorageProviders
             });
         }
 
-        public Task ReadStateAsync(string grainType, GrainReference grainReference, IGrainState grainState)
+
+        public Task ReadStateAsync<T>(string grainType, GrainReference grainReference, IGrainState<T> grainState)
         {
             return DoAndLog(nameof(ReadStateAsync), async () =>
             {
@@ -100,7 +94,7 @@ namespace Orleans.Providers.MongoDB.StorageProviders
             });
         }
 
-        public Task WriteStateAsync(string grainType, GrainReference grainReference, IGrainState grainState)
+        public Task WriteStateAsync<T>(string grainType, GrainReference grainReference, IGrainState<T> grainState)
         {
             return DoAndLog(nameof(WriteStateAsync), async () =>
             {
@@ -167,7 +161,7 @@ namespace Orleans.Providers.MongoDB.StorageProviders
             });
         }
 
-        public Task ClearStateAsync(string grainType, GrainReference grainReference, IGrainState grainState)
+        public Task ClearStateAsync<T>(string grainType, GrainReference grainReference, IGrainState<T> grainState)
         {
             return DoAndLog(nameof(ClearStateAsync), () =>
             {
@@ -241,5 +235,6 @@ namespace Orleans.Providers.MongoDB.StorageProviders
                 throw;
             }
         }
+
     }
 }

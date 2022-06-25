@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Orleans.Providers.MongoDB.Utils;
 using Orleans.Runtime;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 // ReSharper disable RedundantIfElseBlock
 
@@ -12,7 +12,7 @@ namespace Orleans.Providers.MongoDB.Reminders.Store
     public class MongoReminderCollection : CollectionBase<MongoReminderDocument>
     {
         private static readonly FindOneAndUpdateOptions<MongoReminderDocument> FindAndUpsert = new FindOneAndUpdateOptions<MongoReminderDocument> { IsUpsert = true };
-        private readonly IGrainReferenceConverter grainReferenceConverter;
+        private readonly GrainReferenceKeyStringConverter grainReferenceConverter;
         private readonly string serviceId;
         private readonly string collectionPrefix;
 
@@ -22,7 +22,7 @@ namespace Orleans.Providers.MongoDB.Reminders.Store
             string collectionPrefix,
             bool createShardKey,
             string serviceId,
-            IGrainReferenceConverter grainReferenceConverter)
+            GrainReferenceKeyStringConverter grainReferenceConverter)
             : base(mongoClient, databaseName, createShardKey)
         {
             this.serviceId = serviceId;

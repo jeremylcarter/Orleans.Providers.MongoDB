@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Orleans.Providers.MongoDB.Configuration;
-using Orleans.Runtime;
 using Orleans.Serialization;
+using System;
 
 namespace Orleans.Providers.MongoDB.StorageProviders.Serializers
 {
@@ -10,9 +10,9 @@ namespace Orleans.Providers.MongoDB.StorageProviders.Serializers
     {
         private readonly JsonSerializer serializer;
 
-        public JsonGrainStateSerializer(ITypeResolver typeResolver, IGrainFactory grainFactory, MongoDBGrainStorageOptions options)
+        public JsonGrainStateSerializer(IServiceProvider serviceProvider, MongoDBGrainStorageOptions options)
         {
-            var jsonSettings = OrleansJsonSerializer.GetDefaultSerializerSettings(typeResolver, grainFactory);           
+            var jsonSettings = OrleansJsonSerializer.GetDefaultSerializerSettings(serviceProvider);
 
             options?.ConfigureJsonSerializerSettings?.Invoke(jsonSettings);
             this.serializer = JsonSerializer.Create(jsonSettings);
@@ -24,17 +24,17 @@ namespace Orleans.Providers.MongoDB.StorageProviders.Serializers
                 //// values that are not equal to the system defaults.
                 this.serializer.NullValueHandling = NullValueHandling.Include;
                 this.serializer.DefaultValueHandling = DefaultValueHandling.Populate;
-            }            
+            }
         }
 
-        public void Deserialize(IGrainState grainState, JObject entityData)
+        public void Deserialize<T>(IGrainState<T> grainState, JObject entityData)
         {
             var jsonReader = new JTokenReader(entityData);
 
             serializer.Populate(jsonReader, grainState.State);
         }
 
-        public JObject Serialize(IGrainState grainState)
+        public JObject Serialize<T>(IGrainState<T> grainState)
         {
             return JObject.FromObject(grainState.State, serializer);
         }

@@ -1,4 +1,5 @@
 ﻿using Orleans.Providers.MongoDB.Test.GrainInterfaces;
+using Orleans.Runtime;
 using Orleans.Streams;
 using System;
 using System.Threading.Tasks;
@@ -11,8 +12,8 @@ namespace Orleans.Providers.MongoDB.Test.Grains
 
         public async Task Activate()
         {
-            var streamProvider = GetStreamProvider("OrleansTestStream");
-            var streamOfNumbers = streamProvider.GetStream<int>(Guid.Empty, "MyNamespace");
+            var streamProvider = this.GetStreamProvider("OrleansTestStream");
+            var streamOfNumbers = streamProvider.GetStream<int>(StreamId.Create("MyNamespace", Guid.Empty));
 
             await streamOfNumbers.SubscribeAsync((message, token) =>
             {

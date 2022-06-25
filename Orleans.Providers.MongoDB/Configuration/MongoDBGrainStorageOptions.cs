@@ -1,8 +1,8 @@
 ﻿// ReSharper disable InheritdocConsiderUsage
 
 using Newtonsoft.Json;
-using System;
 using Orleans.Runtime;
+using System;
 
 namespace Orleans.Providers.MongoDB.Configuration
 {
